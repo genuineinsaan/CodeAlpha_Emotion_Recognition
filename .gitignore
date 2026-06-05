@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Flask
+instance/
+.webassets-cache
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment Variables
+.env
+
+# Uploads
+uploads/*
+!uploads/.gitkeep
+
+# Dataset (Very Large)
+dataset/
+
+# Trained Models (Optional)
+# Uncomment if model files are too large
+# models/*.h5
+# models/*.pkl
+
+# Output Files
+outputs/*.csv
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary Files
+*.tmp
+*.temp
+
+# Build Files
+build/
+dist/
+*.egg-info/
+
+# Pytest
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/
+
+# TensorFlow
+checkpoint
+*.ckpt
+
+# Audio Files
+*.wav
+*.mp3
+*.m4a
+*.ogg
+*.aac
+*.flac
+*.webm
+
+# Exceptions
+!project_screenshots/*.png
+!outputs/accuracy_plot.png
+!outputs/confusion_matrix.png
