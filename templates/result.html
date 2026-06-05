@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Analysis Report</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="result-container">
+
+        <div class="result-header">
+
+            <h1>Emotion Analysis Report</h1>
+
+            <p>
+                Deep Learning Based Speech Emotion Recognition
+            </p>
+
+        </div>
+
+        <div class="cards-row">
+
+            <div class="info-card emotion-card-main">
+
+                <h3>Predicted Emotion</h3>
+
+                <h2 style="color: {{ emotion_color }};">
+                    {{ emotion }}
+                </h2>
+
+            </div>
+
+            <div class="info-card confidence-card">
+
+                <h3>Confidence Score</h3>
+
+                <h2>
+                    {{ confidence }}%
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="category-card">
+
+            <h3>Emotion Category</h3>
+
+            <p>{{ category }}</p>
+
+        </div>
+
+        <div class="audio-card">
+
+            <h3>Audio Playback</h3>
+
+            <audio controls style="width:100%; margin-top:10px;">
+
+                <source
+                    src="{{ url_for('uploaded_file', filename=audio_path) }}">
+
+                Your browser does not support audio playback.
+
+            </audio>
+
+        </div>
+
+        <div class="confidence-section">
+
+            <h3>Prediction Confidence</h3>
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    style="width: {{ confidence }}%;">
+                </div>
+
+            </div>
+
+            <p style="margin-top:10px;">
+                {{ confidence_level }}
+            </p>
+
+        </div>
+
+        <div class="emotion-description">
+
+            <h3>Emotion Interpretation</h3>
+
+            {% if emotion == "Happy" %}
+
+                <p>
+                    The speaker expresses positive feelings,
+                    happiness and excitement.
+                </p>
+
+            {% elif emotion == "Sad" %}
+
+                <p>
+                    The speaker appears emotionally low,
+                    disappointed or unhappy.
+                </p>
+
+            {% elif emotion == "Angry" %}
+
+                <p>
+                    The speaker demonstrates irritation,
+                    frustration or anger.
+                </p>
+
+            {% elif emotion == "Fearful" %}
+
+                <p>
+                    The speaker appears anxious,
+                    nervous or fearful.
+                </p>
+
+            {% elif emotion == "Calm" %}
+
+                <p>
+                    The speaker maintains a relaxed,
+                    stable emotional state.
+                </p>
+
+            {% elif emotion == "Neutral" %}
+
+                <p>
+                    No strong emotional expression
+                    is detected.
+                </p>
+
+            {% elif emotion == "Disgust" %}
+
+                <p>
+                    The speaker expresses dislike
+                    or strong disapproval.
+                </p>
+
+            {% elif emotion == "Surprised" %}
+
+                <p>
+                    The speaker appears startled
+                    or unexpectedly excited.
+                </p>
+
+            {% else %}
+
+                <p>
+                    Emotion detected successfully.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+        <div class="audio-card">
+
+            <h3>Prediction Details</h3>
+
+            <p>
+                <strong>File:</strong>
+                {{ filename }}
+            </p>
+
+            <p>
+                <strong>Time:</strong>
+                {{ prediction_time }}
+            </p>
+
+        </div>
+
+        <div class="back-btn">
+
+            <a href="/">
+                Analyze Another Audio
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

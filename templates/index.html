@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Recognition from Speech</title>
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+
+</head>
+
+<body>
+
+
+<div class="container">
+
+    <div class="hero-section">
+        <h1>Emotion Recognition from Speech</h1>
+        <p>Deep Learning Based Speech Emotion Analysis System</p>
+    </div>
+
+    <div class="info-section">
+        <h2>About This Project</h2>
+        <p>
+            This application uses Deep Learning and Speech Processing
+            techniques to identify emotions from human voice recordings.
+            The model can classify Happy, Sad, Angry, Fearful, Calm,
+            Neutral, Disgust and Surprised emotions.
+        </p>
+    </div>
+
+    <form action="/predict" method="POST" enctype="multipart/form-data">
+
+        <div class="upload-section">
+
+            <h2>Upload Audio File</h2>
+
+            <input
+            type="file"
+            id="audio_file"
+            name="audio_file"
+            accept=".wav,.mp3,.m4a,.ogg,.flac,.aac,.webm"
+            >
+
+            <audio
+                id="audioPreview"
+                controls
+                style="display:none;margin-top:15px;"
+            ></audio>
+
+        </div>
+
+        <div class="divider">
+            <span>OR</span>
+        </div>
+
+        <div class="record-section">
+
+            <h2>Live Voice Recording</h2>
+
+            <button
+                type="button"
+                id="startBtn"
+                class="record-btn"
+            >
+                🎤 Start Recording
+            </button>
+
+            <button
+                type="button"
+                id="stopBtn"
+                class="stop-btn"
+                disabled
+            >
+                ⏹ Stop Recording
+            </button>
+
+            <p id="recordStatus">
+                Ready to record
+            </p>
+
+            <audio
+                id="recordedAudio"
+                controls
+                style="display:none;margin-top:15px;"
+            ></audio>
+
+        </div>
+
+        <button
+            type="submit"
+            class="analyze-btn"
+        >
+            Analyze Emotion
+        </button>
+
+    </form>
+
+    <div class="emotion-list">
+
+        <h2>Supported Emotions</h2>
+
+        <div class="emotion-grid">
+
+            <div class="emotion-card">😊 Happy</div>
+            <div class="emotion-card">😌 Calm</div>
+            <div class="emotion-card">😐 Neutral</div>
+            <div class="emotion-card">😢 Sad</div>
+            <div class="emotion-card">😡 Angry</div>
+            <div class="emotion-card">😨 Fearful</div>
+            <div class="emotion-card">🤢 Disgust</div>
+            <div class="emotion-card">😲 Surprised</div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const audioInput =
+    document.getElementById("audio_file");
+
+const preview =
+    document.getElementById("audioPreview");
+
+audioInput.addEventListener("change", function () {
+
+    const file = this.files[0];
+
+    if (file) {
+
+        preview.src =
+            URL.createObjectURL(file);
+
+        preview.style.display =
+            "block";
+
+    }
+
+});
+
+let mediaRecorder;
+let audioChunks = [];
+let stream;
+
+const startBtn =
+    document.getElementById("startBtn");
+
+const stopBtn =
+    document.getElementById("stopBtn");
+
+const status =
+    document.getElementById("recordStatus");
+
+const recordedAudio =
+    document.getElementById("recordedAudio");
+
+startBtn.addEventListener("click", async () => {
+
+    try {
+
+        stream =
+            await navigator.mediaDevices.getUserMedia({
+                audio: true
+            });
+
+        mediaRecorder =
+            new MediaRecorder(stream);
+
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = event => {
+
+            audioChunks.push(event.data);
+
+        };
+
+        mediaRecorder.onstop = () => {
+
+            const audioBlob =
+                new Blob(audioChunks, {
+                    type: "audio/webm"
+                });
+
+            const audioUrl =
+                URL.createObjectURL(audioBlob);
+
+            recordedAudio.src =
+                audioUrl;
+
+            recordedAudio.style.display =
+                "block";
+
+            const recordedFile =
+                new File(
+                    [audioBlob],
+                    "recorded_audio.webm",
+                    {
+                        type: "audio/webm"
+                    }
+                );
+
+            const dataTransfer =
+                new DataTransfer();
+
+            dataTransfer.items.add(
+                recordedFile
+            );
+
+            audioInput.files =
+                dataTransfer.files;
+
+            status.innerText =
+                "Recording ready for analysis.";
+
+        };
+
+        mediaRecorder.start();
+
+        status.innerText =
+            "Recording...";
+
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+
+    } catch (error) {
+
+        status.innerText =
+            "Microphone permission denied.";
+
+        console.error(error);
+
+    }
+
+});
+
+stopBtn.addEventListener("click", () => {
+
+    if (mediaRecorder) {
+
+        mediaRecorder.stop();
+
+        if (stream) {
+
+            stream.getTracks().forEach(track => {
+
+                track.stop();
+
+            });
+
+        }
+
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+
+    }
+
+});
+
+</script>
+
+
+</body>
+
+</html>
